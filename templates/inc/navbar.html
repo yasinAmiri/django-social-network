@@ -1,8 +1,8 @@
 <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
   <div class="container-fluid">
       <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link active" href="{% url 'home:home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link active" href="{% url 'home:about' %}">About</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'posts:home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'posts:about' %}">About</a></li>
           {% if request.user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_profile' request.user.id %}">Profile</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_logout' %}">Logout</a></li>

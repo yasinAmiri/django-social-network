@@ -1,4 +1,3 @@
-from django.db.models import Model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .models import Post, Comment, Vote
@@ -13,11 +12,10 @@ from django.urls import reverse_lazy
 
 
 
-
 class MonthPostsView(MonthArchiveView):
     model = Post
     date_field = "created"
-    template_name = "home/index.html"
+    template_name = "posts/index.html"
     context_object_name = "posts"
 
 
@@ -31,7 +29,7 @@ class HomeView(View):
         if request.GET.get("search", None):
             posts = posts.filter(body__icontains=request.GET['search'])
 
-        return render(request, 'home/index.html', {'posts':posts, 'form':self.form_class})
+        return render(request, 'posts/index.html', {'posts':posts, 'form':self.form_class})
 
     def options(self, request, *args, **kwargs):
         response = super().options(request, *args, **kwargs)
@@ -59,7 +57,7 @@ class PostDetailView(View):
         can_like = False
         if request.user.is_authenticated and self.post_instance.user_can_like(request.user):
             can_like = True
-        return render(request, "home/detail.html", {'post':self.post_instance,
+        return render(request, "posts/detail.html", {'post':self.post_instance,
                                                                        'comments':comments,
                                                                        'form':self.form_class,
                                                                        'reply_form':self.form_class_reply,
@@ -74,7 +72,7 @@ class PostDetailView(View):
             new_comment.post = self.post_instance
             new_comment.save()
             messages.success(request, "Comment saved successfully", "success")
-            return redirect("home:post_detail", self.post_instance.id, self.post_instance.slug)
+            return redirect("posts:post_detail", self.post_instance.id, self.post_instance.slug)
 
 
 
@@ -86,19 +84,19 @@ class PostDeleteView(LoginRequiredMixin, View):
             messages.success(request, 'post deleted successfully', 'success')
         else:
             messages.error(request, 'you cannot delete this post', 'danger')
-        return redirect('home:home')
+        return redirect('posts:home')
 
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['body']
-    success_url = reverse_lazy("home:home")
+    success_url = reverse_lazy("posts:home")
 
     def form_valid(self, form):
         if self.object.user.id != self.request.user.id:
             messages.error(self.request, "You cannot update this post", "danger")
-            return redirect("home:home")
+            return redirect("posts:home")
         return super().form_valid(form)
 
 
@@ -106,8 +104,8 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['body']
-    template_name = "home/create.html"
-    success_url = reverse_lazy("home:home")
+    template_name = "posts/create.html"
+    success_url = reverse_lazy("posts:home")
 
     def form_valid(self, form):
         self._create_post(form)
@@ -137,7 +135,7 @@ class PostAddReplyView(LoginRequiredMixin, View):
             reply.is_reply = True
             reply.save()
             messages.success(request, 'reply submitted successfully', 'success')
-        return redirect('home:post_detail', post.id, post.slug)
+        return redirect('posts:post_detail', post.id, post.slug)
 
 
 
@@ -150,12 +148,12 @@ class PostLikeView(LoginRequiredMixin, View):
         else:
             Vote.objects.create(post=post, user=request.user)
             messages.success(request, "You liked this post", "success")
-        return redirect("home:post_detail", post.id, post.slug)
+        return redirect("posts:post_detail", post.id, post.slug)
 
 
 
 class AboutView(TemplateView):
-    template_name = "home/about.html"
+    template_name = "posts/about.html"
     
     def get_context_data(self, **kwargs):
         context         = super().get_context_data(**kwargs)

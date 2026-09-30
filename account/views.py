@@ -14,7 +14,7 @@ class UserRegisterView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('home:home')
+            return redirect('posts:home')
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
@@ -27,7 +27,7 @@ class UserRegisterView(View):
             cd = form.cleaned_data
             User.objects.create_user(cd["username"], cd["email"], cd["password"])
             messages.success(request, "Registered Successfully", "success")
-            return redirect("home:home")
+            return redirect("posts:home")
         return render(request, self.template_name, {'form':form})
 
 
@@ -41,7 +41,7 @@ class UserLoginView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('home:home')
+            return redirect('posts:home')
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
@@ -58,7 +58,7 @@ class UserLoginView(View):
                 messages.success(request, 'You logged in successfully', 'success')
                 if self.next:
                     return redirect(self.next)
-                return redirect('home:home')
+                return redirect('posts:home')
             messages.error(request, 'username/password is wrong..!', 'warning')
         return render(request, self.template_name, {'form':form})
 
@@ -67,7 +67,7 @@ class UserLogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         messages.success(request, 'you logged out successfully.', 'success')
-        return redirect('home:home')
+        return redirect('posts:home')
 
 
 class UserProfileView(LoginRequiredMixin, View):
