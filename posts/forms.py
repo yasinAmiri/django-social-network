@@ -4,8 +4,11 @@ from .models import Post, Comment
 
 class PostCreateUpdateForm(forms.ModelForm):
     class Meta:
-        model  = Post
-        fields = ('body',)
+        model   = Post
+        fields  = ('body','image')
+        widgets = {
+            'body':forms.Textarea(attrs={'class':'form-control', 'rows': 4}),
+        }
 
 
 class CommentCreateForm(forms.ModelForm):

@@ -90,7 +90,7 @@ class PostDeleteView(LoginRequiredMixin, View):
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ['body']
+    form_class = PostCreateUpdateForm
     success_url = reverse_lazy("posts:home")
 
     def form_valid(self, form):
@@ -103,21 +103,17 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['body']
+    form_class = PostCreateUpdateForm
     template_name = "posts/create.html"
     success_url = reverse_lazy("posts:home")
 
     def form_valid(self, form):
-        self._create_post(form)
-        return super().form_valid(form)
-
-    def _create_post(self, form):
         post = form.save(commit=False)
         post.slug = slugify(form.cleaned_data['body'][:30])
         post.user = self.request.user
         post.save()
         messages.success(self.request, "post created successfully", "success")
-
+        return redirect(self.success_url)
 
 
 class PostAddReplyView(LoginRequiredMixin, View):

@@ -12,11 +12,25 @@
          <a href="{% url 'posts:post_update' post.id %}" class="btn btn-info">Update</a>
      {% endif %}
 
-     <p><a href="{% url 'account:user_profile' post.user.id %}">{{ post.user.username}}</a> / {{ post.updated|date:"Y-M" }}</p><hr/>
-     <p class="post-body" >{{ post.body }}</p>
+     <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+         {% if post.user.profile.avatar %}
+             <img src="{{ post.user.profile.avatar.url }}" alt="avatar" style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+         {% endif %}
+         <p style="margin:0;">
+             <a href="{% url 'account:user_profile' post.user.id %}">{{ post.user.username }}</a>
+             / {{ post.updated|date:"Y-M" }}
+         </p>
+     </div>
+     <hr/>
+
+     <p class="post-body">{{ post.body }}</p>
+
+     {% if post.image %}
+         <img src="{{ post.image.url }}" alt="post image" style="max-width: 400px; width: 100%; border-radius: 8px; margin: 12px 0;">
+     {% endif %}
 
      {% if request.user.is_authenticated %}
-        <a href="{% url 'posts:post_like' post.id %}" class="{% if can_like %}disabled{% endif %} btn btn-primary col-md-2" >Like {{ post.likes_count }}</a>
+        <a href="{% url 'posts:post_like' post.id %}" class="{% if can_like %}disabled{% endif %} btn btn-primary col-md-2">Like {{ post.likes_count }}</a>
 
         <form action="" method="post">
             {% csrf_token %}

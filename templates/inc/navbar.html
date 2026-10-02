@@ -6,6 +6,11 @@
           {% if request.user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_profile' request.user.id %}">Profile</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_logout' %}">Logout</a></li>
+                    {% if request.user.profile.avatar %}
+                        <li class="nav-item ms-auto">
+                            <img src="{{ request.user.profile.avatar.url }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" alt="avatar">
+                        </li>
+                    {% endif %}
           {% else %}
                    <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_register' %}">Register</a></li>
                    <li class="nav-item"><a class="nav-link active" href="{% url 'account:user_login' %}">Login</a></li>

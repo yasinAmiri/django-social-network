@@ -33,11 +33,17 @@ class UserLoginForm(forms.Form):
 
 
 class EditUserForm(forms.ModelForm):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class":"form-control"}))
 
     class Meta:
         model  = Profile
-        fields = ("age", "address")
+        fields = ("avatar", "age", "address")
+
+        widgets = {
+            'avatar' : forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'age'    : forms.NumberInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows':2}),
+        }
 
 
 

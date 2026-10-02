@@ -15,4 +15,5 @@ class Profile(models.Model):
     user    = models.OneToOneField(User, on_delete=models.CASCADE)
     age     = models.PositiveSmallIntegerField(default=0)
     address = models.TextField(null=True, blank=True)
+    avatar  = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
